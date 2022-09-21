@@ -1,0 +1,9 @@
+.active {
+    text-decoration: none;
+    color: rgba(211, 199, 199, 0.75);
+    text-transform: capitalize;
+}
+.active:hover {
+    text-decoration: none;
+    color:white;
+}

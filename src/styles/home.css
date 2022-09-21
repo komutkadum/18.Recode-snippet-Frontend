@@ -1,0 +1,36 @@
+.home__container {
+    margin-top: 15px;
+}
+
+.home__container .home__github {
+    background:#6e5494;
+    border : 0;
+}
+.home__container .home__github:hover {
+    background:#523f6e;
+    border : 0;
+}
+.home__container .home__facebook {
+    background:#4267B2;
+    border:0;
+}.home__container .home__facebook:hover {
+    background:#304d88;
+    border:0;
+}
+.home__container .home__google {
+    background:#DB4437;
+    border:0;
+}
+
+.home__container .home__google:hover {
+    background:#a73429;
+    border:0;
+}
+.home__container .home__linkedin {
+    background:#2867B2;
+    border:0;
+}
+.home__container .home__linkedin:hover {
+    background:#1a4477;
+    border:0;
+}

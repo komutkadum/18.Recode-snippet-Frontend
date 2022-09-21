@@ -1,0 +1,22 @@
+.spinner__container {
+    margin-bottom: 15px;
+}
+.spinner__container .spinner__badge {
+    border:1px solid #3498db;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.spinner__container .spinner__active {
+    background-color:#236c9c;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.spinner__container .spinner__badge:hover {
+    background-color:#236c9c;
+}
+.spinner__container .spinner__card__container {
+    margin-top: 15px;
+    background:#253444;
+}

@@ -1,0 +1,32 @@
+.profile__container { 
+    text-transform: capitalize;
+    margin-bottom: 15px;
+}
+
+.profile__container .profile__card {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    flex-direction: column;
+    text-align: center  ;
+    align-items: center ;
+    justify-content: center;
+    border-color: #badbcc;
+}
+
+.profile__container .profile__background {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+.profile__container .profile__links__container {
+    padding:15px;
+}
+
+.profile__container .profile__links {
+    font-weight: bold;
+    color: #0f5132;
+    font-size: 1.1rem;
+}
+

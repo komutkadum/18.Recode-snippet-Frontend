@@ -1,0 +1,18 @@
+.signIn__container {
+    margin-top:100px;
+    min-width: 300px;
+    width: 50%;
+    display: grid;
+    grid-gap: 10px;
+    place-items: center;
+    margin-inline: auto;
+}
+
+.signIn__container > .signIn__github {
+    background-color: #6e5494;
+    color:white;
+}
+.signIn__container > .signIn__github:hover {
+    background-color: #5f4980;
+    color:white;
+}
