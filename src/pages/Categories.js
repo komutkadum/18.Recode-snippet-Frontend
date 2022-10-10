@@ -1,9 +1,11 @@
 import {Card,Badge} from 'react-bootstrap'
 import axios from 'axios';
 import { snippetRoute } from '../api/apiRoutes';
+import { useQuery } from './Other';
 
 function Categories({setSnippetData,setDataLoading,setZeroData,setCurrentTag,currentTag}) {
     const tagsList = ['All','express','django','github','algorithm','datastructure','flask','styles','php','others','react'];
+    let query = useQuery();
     const searchTags = async(tags) =>{
         // if the tag selected is the current tag
         // then dont call to the backend
@@ -12,9 +14,13 @@ function Categories({setSnippetData,setDataLoading,setZeroData,setCurrentTag,cur
         }
         setDataLoading(true);
         setZeroData(false);
-        let url = `${snippetRoute}/${localStorage.getItem('userid')}/search/${tags}`
+        let userId = localStorage.getItem('userid');
+        if(query.get('user')){
+            userId = query.get('user');
+        }
+        let url = `${snippetRoute}/${userId}/search/${tags}`
         if(tags==='All'){
-            url = `${snippetRoute}/${localStorage.getItem('userid')}`
+            url = `${snippetRoute}/${userId}`
         }
         await axios.get(url)
             .then(res=>{

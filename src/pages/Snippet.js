@@ -11,25 +11,35 @@ import { deleteSnippet } from '../api';
 import Swal from 'sweetalert2';
 import { timeAgo } from '../utility/timeAgo';
 import { searchRoute, snippetRoute } from '../api/apiRoutes';
+import { useQuery } from './Other';
 
 function Snippet() {
+  
     const [snippetData, setSnippetData] = useState([]);
     const [dataLoading, setDataLoading] = useState(true);
     const [zeroData, setZeroData] = useState(false);
     const [currentTag, setCurrentTag] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
     const history = useHistory();
+    const query = useQuery();
     useEffect(()=>{
         const fetch = async() =>{
             setDataLoading(true);
             setZeroData(false);
             setCurrentTag("")
             // for all
-            let url = `${snippetRoute}/${localStorage.getItem('userid')}`
+            let url = `${snippetRoute}/${localStorage.getItem('userid')}?page=${page}`
+            if(query.get('user')){
+                url = `${snippetRoute}/${query.get('user')}?page=${page}`;
+            }
             await axios.get(url)
             .then(res=>{
                 setDataLoading(false)
-                setSnippetData(res.data);
-                if(res.data.length<1){
+                setSnippetData(res.data.myLists);
+                setTotalPage(res.data.totalPages);
+                setPage(parseInt(res.data.currentPage));
+                if(res.data.myLists.length<1){
                     setZeroData(true);
                 }
             })
@@ -39,7 +49,7 @@ function Snippet() {
             })
         }
         fetch();
-    },[]);
+    },[query,page]);
 
     const editSnippet = (id) =>{
         return history.push(`/addcode?id=${id}`);
@@ -73,19 +83,25 @@ function Snippet() {
                                     editSnippet={editSnippet}
                                     deleteSnippetCode={deleteSnippetCode}
                                     index={index}
+                                    query={query}
                                     />
                             ))
                             }
                         </Accordion>
                     </ListGroup>
                     {zeroData&&<Alert variant="danger"><center>No Snippet Present!</center></Alert>}
+                    <div size="sm" className='mt-4 d-flex justify-content-center' style={{columnGap:"20px",alignItems:"center"}}>
+                        <Button onClick={()=>setPage(prev=>prev-1)} disabled={page<=1}>Prev</Button>
+                        <Button variant='light' disabled>{page}</Button>
+                        <Button onClick={()=>setPage(prev=>prev+1)} disabled={totalPage==page}>Next</Button>
+                    </div>
                     </>
             }
         </Container>
     )
 }
 
-const CodeAccordionList = ({value,editSnippet,deleteSnippetCode,index}) =>{
+const CodeAccordionList = ({value,editSnippet,deleteSnippetCode,index,query}) =>{
     const customBadgeStyle = {
         border:'1px solid #8e44ad',color:'#8e44ad'
     }
@@ -117,13 +133,19 @@ const CodeAccordionList = ({value,editSnippet,deleteSnippetCode,index}) =>{
                                     className="rounded"
                                     onClick={() =>copyToClipboard(value.snippet)}>
                                     <i className="fas fa-copy"></i> &nbsp;Copy
-                                </Button>&nbsp;&nbsp;&nbsp;
-                                <Button 
-                                    variant="success" 
-                                    className="rounded" 
-                                    onClick={()=>editSnippet(value._id)}>
-                                    <i className="fas fa-edit"></i> &nbsp;Edit
                                 </Button>
+                                {(!query.get('user')||{})&&
+                                    <>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <Button 
+                                        variant="success" 
+                                        className="rounded" 
+                                        onClick={()=>editSnippet(value._id)}>
+                                        <i className="fas fa-edit"></i> &nbsp;Edit
+                                    </Button>
+                                    </>
+                                }
+                                {!query.get('user')&&<>
                                 &nbsp;&nbsp;&nbsp;
                                 <Button 
                                     variant="danger" 
@@ -131,6 +153,8 @@ const CodeAccordionList = ({value,editSnippet,deleteSnippetCode,index}) =>{
                                     onClick={()=>deleteSnippetCode(value._id,value.title,index)}>
                                     <i className="fas fa-trash-alt"></i> &nbsp;Delete
                                 </Button>
+                                </>
+                                }
                             </ButtonGroup>
                         </div>
                     </>
@@ -141,6 +165,7 @@ const CodeAccordionList = ({value,editSnippet,deleteSnippetCode,index}) =>{
 
 const SearchInput = ({setSnippetData,setDataLoading,setZeroData,setCurrentTag}) => {
     const [searchValue, setSearchValue] = useState("");
+    let query = useQuery();
     const searchSnippet = async(e) =>{
         e.preventDefault();
         if(searchValue==="") return;
@@ -149,7 +174,7 @@ const SearchInput = ({setSnippetData,setDataLoading,setZeroData,setCurrentTag}) 
         setCurrentTag("")
         await axios.post(searchRoute,{
             searchValue,
-            userId : localStorage.getItem('userid')
+            userId : query.get('user')?query.get('user'):localStorage.getItem('userid')
         }).then(res=>{
             if(res.data.message!=="success"){
                 setDataLoading(false);
